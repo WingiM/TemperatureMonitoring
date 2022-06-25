@@ -4,3 +4,5 @@ TemperatureMonitoring.Core/bin/
 TemperatureMonitoring.Core/obj/
 TemperatureMonitoring.WindowsForms/bin/
 TemperatureMonitoring.WindowsForms/obj/
+TemperatureMonitoring.Core.Tests/bin/
+TemperatureMonitoring.Core.Tests/obj/

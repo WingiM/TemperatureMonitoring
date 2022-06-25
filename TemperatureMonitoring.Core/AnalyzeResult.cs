@@ -5,25 +5,25 @@ namespace TemperatureMonitoring.Core
 {
     public class AnalyzeResult
     {
-        private readonly List<string> _results;
-        private readonly Product _product;
-        private TimeSpan _minimumTemperatureStoringTime;
-        private TimeSpan _maximumTemperatureStoringTime;
+        public readonly List<string> Results;
+        public readonly Product Product;
+        public TimeSpan MinimumTemperatureStoringTime;
+        public TimeSpan MaximumTemperatureStoringTime;
 
-        public AnalyzeResult(Product product)
+        internal AnalyzeResult(Product product)
         {
-            _results = new();
-            _product = product;
+            Results = new();
+            Product = product;
         }
 
         internal void AccountTransportingMistake(DateTime dateTime, int fact, int norm)
         {
-            if (norm == _product.MaxTemperature)
-                _maximumTemperatureStoringTime += TemperatureSensorAnalyzer.AnalyzingTimeInterval;
+            if (norm == Product.MaxTemperature)
+                MaximumTemperatureStoringTime += TemperatureSensorAnalyzer.AnalyzingTimeInterval;
             else
-                _minimumTemperatureStoringTime += TemperatureSensorAnalyzer.AnalyzingTimeInterval;
+                MinimumTemperatureStoringTime += TemperatureSensorAnalyzer.AnalyzingTimeInterval;
             
-            _results.Add($"{dateTime};{fact};{norm};{fact - norm}");
+            Results.Add($"{dateTime:dd.MM.yyyy HH:mm};{fact};{norm};{fact - norm}");
         }
     }
 }

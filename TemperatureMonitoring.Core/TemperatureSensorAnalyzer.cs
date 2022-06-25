@@ -6,7 +6,7 @@ namespace TemperatureMonitoring.Core
 {
     public class TemperatureSensorAnalyzer : ITemperatureAnalyzer
     {
-        public static TimeSpan AnalyzingTimeInterval { get; } = TimeSpan.FromMinutes(10);
+        internal static TimeSpan AnalyzingTimeInterval { get; } = TimeSpan.FromMinutes(10);
 
         public AnalyzeResult AnalyzeFromFile(Product product, string filename)
         {
@@ -31,7 +31,10 @@ namespace TemperatureMonitoring.Core
             {
                 var res = IsTemperatureRight(product, temp);
                 if (res.IsOk)
+                {
+                    initiateDateTime += AnalyzingTimeInterval;
                     continue;
+                }
                 
                 result.AccountTransportingMistake(initiateDateTime, res.FactTemperature, res.NormTemperature);
                 initiateDateTime += AnalyzingTimeInterval;

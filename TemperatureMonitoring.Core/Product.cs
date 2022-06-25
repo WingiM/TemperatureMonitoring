@@ -4,19 +4,10 @@ namespace TemperatureMonitoring.Core
 {
     public class Product
     {
-        public string Name { get; set; }
-        public int MinTemperature { get; set; }
-        public TimeSpan MinTemperatureTimeToStore { get; set; }
-        public int MaxTemperature { get; set; }
-        public TimeSpan MaxTemperatureTimeToStore { get; set; }
-
-        public Product(string name, int minTemperature, TimeSpan minTemperatureTimeToStore, int maxTemperature, TimeSpan maxTemperatureTimeToStore)
-        {
-            Name = name;
-            MinTemperature = minTemperature;
-            MinTemperatureTimeToStore = minTemperatureTimeToStore;
-            MaxTemperature = maxTemperature;
-            MaxTemperatureTimeToStore = maxTemperatureTimeToStore;
-        }
+        public string Name { get; init; }
+        public int MinTemperature { get; init; } = int.MinValue;
+        public TimeSpan MinTemperatureTimeToStore { get; init; }
+        public int MaxTemperature { get; init; } = int.MaxValue;
+        public TimeSpan MaxTemperatureTimeToStore { get; init; }
     }
 }
