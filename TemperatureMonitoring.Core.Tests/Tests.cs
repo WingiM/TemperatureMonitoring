@@ -7,8 +7,9 @@ namespace TemperatureMonitoring.Core.Tests
 {
     public class Tests
     {
-        private static string TestFile1 = @"C:\Users\202026\source\repos\TemperatureMonitoring\TemperatureMonitoring.Core.Tests\testFiles\test1.txt";
-        private static string WrongFile = @"C:\Users\202026\source\repos\TemperatureMonitoring\TemperatureMonitoring.Core.Tests\testFiles\test123.txt";
+        private static string TestFile = @"C:\Users\202026\source\repos\TemperatureMonitoring\TemperatureMonitoring.Core.Tests\testFiles\test1.txt";
+        private static string WrongFormatFile = @"C:\Users\202026\source\repos\TemperatureMonitoring\TemperatureMonitoring.Core.Tests\testFiles\test2.txt";
+        private static string NotExistingFile = @"C:\Users\202026\source\repos\TemperatureMonitoring\TemperatureMonitoring.Core.Tests\testFiles\test123.txt";
         private ITemperatureAnalyzer _analyzer;
         [SetUp]
         public void Setup()
@@ -35,7 +36,7 @@ namespace TemperatureMonitoring.Core.Tests
                 "12.06.2022 15:53;-5;-3;-2",
                 "12.06.2022 16:03;-4;-3;-1",
                 "12.06.2022 16:13;-4;-3;-1",
-                "12.06.2022 16:23;-4;-3;-1",
+                "12.06.2022 16:23;-4;-3;-1"
             };
             var expectedMinTempDuration = TimeSpan.FromMinutes(70);
             
@@ -77,7 +78,7 @@ namespace TemperatureMonitoring.Core.Tests
                 "14.06.2022 09:27;-4;-5;1",
                 "14.06.2022 09:57;-4;-5;1",
                 "14.06.2022 10:07;-4;-5;1",
-                "14.06.2022 10:17;-4;-5;1",
+                "14.06.2022 10:17;-4;-5;1"
             };
             var expectedMaxTempDuration = TimeSpan.FromMinutes(210);
             
@@ -104,11 +105,11 @@ namespace TemperatureMonitoring.Core.Tests
                 "12.06.2022 15:53;-5;-3;-2",
                 "12.06.2022 16:03;-4;-3;-1",
                 "12.06.2022 16:13;-4;-3;-1",
-                "12.06.2022 16:23;-4;-3;-1",
+                "12.06.2022 16:23;-4;-3;-1"
             };
             var expectedMinTempDuration = TimeSpan.FromMinutes(70);
             
-            var result = _analyzer.AnalyzeFromFile(product, TestFile1);
+            var result = _analyzer.AnalyzeFromFile(product, TestFile);
             
             Assert.That(result.MinimumTemperatureStoringTime, Is.EqualTo(expectedMinTempDuration), "Wrong storing time");
             Assert.IsTrue(result.Results.SequenceEqual(expectedLines), "Wrong result lines");
@@ -119,7 +120,7 @@ namespace TemperatureMonitoring.Core.Tests
         {
             Product product = new Product();
 
-            var result = _analyzer.AnalyzeFromFile(product, TestFile1);
+            var result = _analyzer.AnalyzeFromFile(product, TestFile);
             
             Assert.That(result.MaximumTemperatureStoringTime, Is.EqualTo(TimeSpan.Zero));
             Assert.That(result.MinimumTemperatureStoringTime, Is.EqualTo(TimeSpan.Zero));
@@ -127,7 +128,7 @@ namespace TemperatureMonitoring.Core.Tests
         }
 
         [Test]
-        public void WrongFileParsing()
+        public void NotExistingFileParsing()
         {
             Product product = new Product
             {
@@ -135,7 +136,19 @@ namespace TemperatureMonitoring.Core.Tests
                 MinTemperature = -3, MinTemperatureTimeToStore = TimeSpan.FromMinutes(60)
             };
 
-            Assert.Throws<FileReadException>(() => _analyzer.AnalyzeFromFile(product, WrongFile));
+            Assert.Throws<FileReadException>(() => _analyzer.AnalyzeFromFile(product, NotExistingFile));
+        }
+
+        [Test]
+        public void WrongFormatFileParsing()
+        {
+            Product product = new Product
+            {
+                Name = "Семга", MaxTemperature = 5, MaxTemperatureTimeToStore = TimeSpan.FromMinutes(20),
+                MinTemperature = -3, MinTemperatureTimeToStore = TimeSpan.FromMinutes(60)
+            };
+
+            Assert.Throws<FileReadException>(() => _analyzer.AnalyzeFromFile(product, WrongFormatFile));
         }
     }
 }
