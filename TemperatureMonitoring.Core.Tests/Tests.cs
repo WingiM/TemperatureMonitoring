@@ -115,6 +115,18 @@ namespace TemperatureMonitoring.Core.Tests
         }
 
         [Test]
+        public void NoTemperatures()
+        {
+            Product product = new Product();
+
+            var result = _analyzer.AnalyzeFromFile(product, TestFile1);
+            
+            Assert.That(result.MaximumTemperatureStoringTime, Is.EqualTo(TimeSpan.Zero));
+            Assert.That(result.MinimumTemperatureStoringTime, Is.EqualTo(TimeSpan.Zero));
+            Assert.IsTrue(result.Results.Count == 0);
+        }
+
+        [Test]
         public void WrongFileParsing()
         {
             Product product = new Product

@@ -16,7 +16,7 @@ namespace TemperatureMonitoring.Core
             Product = product;
         }
 
-        internal void AccountTransportingMistake(DateTime dateTime, int fact, int norm)
+        internal void AccountTransportingMistake(DateTime dateTime, int fact, int? norm)
         {
             if (norm == Product.MaxTemperature)
                 MaximumTemperatureStoringTime += TemperatureSensorAnalyzer.AnalyzingTimeInterval;

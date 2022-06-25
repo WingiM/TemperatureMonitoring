@@ -45,6 +45,10 @@ namespace TemperatureMonitoring.Core
                 return new ComparisionResult(false, temp, product.MinTemperature);
             if (temp > product.MaxTemperature)
                 return new ComparisionResult(false, temp, product.MaxTemperature);
+
+            if (product.MinTemperature == int.MinValue && product.MaxTemperature == int.MaxValue)
+                return new ComparisionResult(true, temp, null);
+            
             return new ComparisionResult(true, temp,
                 Math.Abs(temp - product.MinTemperature) < Math.Abs(product.MaxTemperature - temp)
                     ? product.MinTemperature
