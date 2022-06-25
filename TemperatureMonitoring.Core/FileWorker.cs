@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using TemperatureMonitoring.Core.IntermediateClasses;
@@ -13,7 +14,7 @@ namespace TemperatureMonitoring.Core
             try
             {
                 using StreamReader fs = new(File.Open(filename, FileMode.Open, FileAccess.Read));
-                DateTime initiateDateTime = DateTime.Parse(fs.ReadLine());
+                DateTime initiateDateTime = DateTime.ParseExact(fs.ReadLine(), "dd.MM.yyyy HH:mm", null, DateTimeStyles.None);
                 int[] temperatureValues = fs.ReadLine().Split().Select(int.Parse).ToArray();
 
                 return new FileParsingResult { InitiateDate = initiateDateTime, Temperatures = temperatureValues};
