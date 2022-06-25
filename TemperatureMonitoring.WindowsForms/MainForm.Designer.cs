@@ -40,12 +40,14 @@ namespace TemperatureMonitoring.WindowsForms
             this.tb_MaxTempDuration = new System.Windows.Forms.TextBox();
             this.tb_MinTemp = new System.Windows.Forms.TextBox();
             this.tb_MinTempDuration = new System.Windows.Forms.TextBox();
-            this.dateTimePicker = new System.Windows.Forms.DateTimePicker();
             this.tb_Temperature = new System.Windows.Forms.TextBox();
             this.btn_Load = new System.Windows.Forms.Button();
             this.btn_Submit = new System.Windows.Forms.Button();
             this.lw_Content = new System.Windows.Forms.ListBox();
             this.VerdictText = new System.Windows.Forms.Label();
+            this.dateTimePicker = new System.Windows.Forms.TextBox();
+            this.btn_Save = new System.Windows.Forms.Button();
+            this.saveFile = new System.Windows.Forms.SaveFileDialog();
             this.SuspendLayout();
             // 
             // label1
@@ -132,13 +134,6 @@ namespace TemperatureMonitoring.WindowsForms
             this.tb_MinTempDuration.Size = new System.Drawing.Size(100, 23);
             this.tb_MinTempDuration.TabIndex = 9;
             // 
-            // dateTimePicker
-            // 
-            this.dateTimePicker.Location = new System.Drawing.Point(109, 144);
-            this.dateTimePicker.Name = "dateTimePicker";
-            this.dateTimePicker.Size = new System.Drawing.Size(200, 23);
-            this.dateTimePicker.TabIndex = 10;
-            // 
             // tb_Temperature
             // 
             this.tb_Temperature.Location = new System.Drawing.Point(109, 181);
@@ -183,17 +178,35 @@ namespace TemperatureMonitoring.WindowsForms
             this.VerdictText.Size = new System.Drawing.Size(0, 15);
             this.VerdictText.TabIndex = 19;
             // 
+            // dateTimePicker
+            // 
+            this.dateTimePicker.Location = new System.Drawing.Point(109, 144);
+            this.dateTimePicker.Name = "dateTimePicker";
+            this.dateTimePicker.Size = new System.Drawing.Size(223, 23);
+            this.dateTimePicker.TabIndex = 20;
+            // 
+            // btn_Save
+            // 
+            this.btn_Save.Location = new System.Drawing.Point(27, 353);
+            this.btn_Save.Name = "btn_Save";
+            this.btn_Save.Size = new System.Drawing.Size(182, 23);
+            this.btn_Save.TabIndex = 21;
+            this.btn_Save.Text = "Сохранить отчет";
+            this.btn_Save.UseVisualStyleBackColor = true;
+            this.btn_Save.Click += new System.EventHandler(this.btn_Save_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.btn_Save);
+            this.Controls.Add(this.dateTimePicker);
             this.Controls.Add(this.VerdictText);
             this.Controls.Add(this.lw_Content);
             this.Controls.Add(this.btn_Submit);
             this.Controls.Add(this.btn_Load);
             this.Controls.Add(this.tb_Temperature);
-            this.Controls.Add(this.dateTimePicker);
             this.Controls.Add(this.tb_MinTempDuration);
             this.Controls.Add(this.tb_MinTemp);
             this.Controls.Add(this.tb_MaxTempDuration);
@@ -224,11 +237,13 @@ namespace TemperatureMonitoring.WindowsForms
         private System.Windows.Forms.TextBox tb_MaxTempDuration;
         private System.Windows.Forms.TextBox tb_MinTemp;
         private System.Windows.Forms.TextBox tb_MinTempDuration;
-        private System.Windows.Forms.DateTimePicker dateTimePicker;
         private System.Windows.Forms.TextBox tb_Temperature;
         private System.Windows.Forms.Button btn_Load;
         private System.Windows.Forms.Button btn_Submit;
         private System.Windows.Forms.ListBox lw_Content;
         private System.Windows.Forms.Label VerdictText;
+        private System.Windows.Forms.TextBox dateTimePicker;
+        private System.Windows.Forms.Button btn_Save;
+        private System.Windows.Forms.SaveFileDialog saveFile;
     }
 }

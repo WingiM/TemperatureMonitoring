@@ -16,6 +16,7 @@ namespace TemperatureMonitoring.WindowsForms
     {
         private readonly ITemperatureAnalyzer _analyzer;
         private Product _currentProduct;
+        private AnalyzeResult _result;
 
         public MainForm()
         {
@@ -79,6 +80,7 @@ namespace TemperatureMonitoring.WindowsForms
 
         private void ShowResult(AnalyzeResult result)
         {
+            _result = result;
             lw_Content.Items.Clear();
             lw_Content.Items.Add($"Дата\t\tФакт\tНорма\tРасхождение");
             foreach (var line in result.Results)
@@ -92,6 +94,21 @@ namespace TemperatureMonitoring.WindowsForms
             if (result.MinimumTemperatureStoringTime > result.Product.MinTemperatureTimeToStore)
                 VerdictText.Text =
                     $"Порог минимально допустимой температуры превышен на {(result.MinimumTemperatureStoringTime).TotalMinutes} минут";
+        }
+
+        private void btn_Save_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (saveFile.ShowDialog() == DialogResult.OK)
+                {
+                    _analyzer.SaveToFile(_result, saveFile.FileName, VerdictText.Text);
+                }
+            }
+            catch (FileReadException)
+            {
+                MessageBox.Show("Cannot save file");
+            }
         }
     }
 }

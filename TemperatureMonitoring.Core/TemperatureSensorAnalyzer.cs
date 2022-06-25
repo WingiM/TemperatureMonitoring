@@ -40,6 +40,23 @@ namespace TemperatureMonitoring.Core
             return result;
         }
 
+        public void SaveToFile(AnalyzeResult result, string filename, string verdict)
+        {
+            try
+            {
+                using StreamWriter sw = new(File.Open(filename, FileMode.Create, FileAccess.Write));
+                foreach (var line in result.Results)
+                {
+                    sw.WriteLine(line);
+                }
+                sw.WriteLine(verdict);
+            }
+            catch (Exception e)
+            {
+                throw new FileReadException($"Error reading file {filename}", e);
+            }
+        }
+
         private ComparisionResult IsTemperatureRight(Product product, int temp)
         {
             if (temp < product.MinTemperature)
