@@ -26,6 +26,7 @@ namespace TemperatureMonitoring.Core
 
         public AnalyzeResult AnalyzeFromInput(Product product, DateTime initiateDateTime, int[] temperatureValues)
         {
+            ProductValidator.ValidateProduct(product);
             AnalyzeResult result = new(product);
             for (int i = 0; i < temperatureValues.Length; ++i, initiateDateTime += AnalyzingTimeInterval)
             {
