@@ -4,4 +4,16 @@
         <TargetFramework>net5.0</TargetFramework>
     </PropertyGroup>
 
+    <ItemGroup>
+      <Compile Remove="data\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Remove="data\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="data\**" />
+    </ItemGroup>
+
 </Project>
