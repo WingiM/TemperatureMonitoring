@@ -1,4 +1,4 @@
-﻿namespace TemperatureMonitoring.Core
+﻿namespace TemperatureMonitoring.Core.IntermediateClasses
 {
     internal class ComparisionResult
     {

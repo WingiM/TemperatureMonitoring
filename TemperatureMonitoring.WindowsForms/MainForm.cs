@@ -1,26 +1,24 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using TemperatureMonitoring.Core;
+using TemperatureMonitoring.Core.IntermediateClasses;
+using TemperatureMonitoring.Core.Interfaces;
 
 namespace TemperatureMonitoring.WindowsForms
 {
     public partial class MainForm : Form
     {
         private readonly ITemperatureAnalyzer _analyzer;
+        private readonly IFileWorker _fileWorker;
         private Product _currentProduct;
         private AnalyzeResult _result;
 
         public MainForm()
         {
             _analyzer = new TemperatureSensorAnalyzer();
+            _fileWorker = new FileWorker();
             InitializeComponent();
             lw_Content.Items.Add($"Дата\t\tФакт\tНорма\tРасхождение");
         }
@@ -32,7 +30,9 @@ namespace TemperatureMonitoring.WindowsForms
                 FormProduct();
                 if (loadFile.ShowDialog() == DialogResult.OK)
                 {
-                    var res = _analyzer.AnalyzeFromFile(_currentProduct, loadFile.FileName);
+                    var parsingResults =
+                        _fileWorker.ParseFile(loadFile.FileName);
+                    var res = _analyzer.Analyze(_currentProduct, parsingResults);
                     ShowResult(res);
                 }
             }
@@ -69,7 +69,7 @@ namespace TemperatureMonitoring.WindowsForms
                 FormProduct();
                 int[] temps = tb_Temperature.Text.Split().Select(int.Parse).ToArray();
                 DateTime date = DateTime.Parse(dateTimePicker.Text);
-                var res = _analyzer.AnalyzeFromInput(_currentProduct, date, temps);
+                var res = _analyzer.Analyze(_currentProduct, date, temps);
                 ShowResult(res);
             }
             catch (Exception)
@@ -104,7 +104,7 @@ namespace TemperatureMonitoring.WindowsForms
                 saveFile.Filter = "Text files (*.txt)|*.txt";
                 if (saveFile.ShowDialog() == DialogResult.OK)
                 {
-                    _analyzer.SaveToFile(_result, VerdictText.Text, saveFile.FileName);
+                    _fileWorker.SaveToFile(_result, VerdictText.Text, saveFile.FileName);
                 }
             }
             catch (FileReadException)

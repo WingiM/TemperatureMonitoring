@@ -1,6 +1,6 @@
 ﻿using System;
-using System.IO;
-using System.Linq;
+using TemperatureMonitoring.Core.IntermediateClasses;
+using TemperatureMonitoring.Core.Interfaces;
 
 namespace TemperatureMonitoring.Core
 {
@@ -8,25 +8,8 @@ namespace TemperatureMonitoring.Core
     {
         internal static TimeSpan AnalyzingTimeInterval { get; } = TimeSpan.FromMinutes(10);
 
-        public AnalyzeResult AnalyzeFromFile(Product product, string filename)
+        public AnalyzeResult Analyze(Product product, DateTime initiateDateTime, int[] temperatureValues)
         {
-            try
-            {
-                using StreamReader fs = new(File.Open(filename, FileMode.Open, FileAccess.Read));
-                DateTime initiateDateTime = DateTime.Parse(fs.ReadLine());
-                int[] temperatureValues = fs.ReadLine().Split().Select(int.Parse).ToArray();
-
-                return AnalyzeFromInput(product, initiateDateTime, temperatureValues);
-            }
-            catch (Exception e)
-            {
-                throw new FileReadException($"Error reading file {filename}", e);
-            }
-        }
-
-        public AnalyzeResult AnalyzeFromInput(Product product, DateTime initiateDateTime, int[] temperatureValues)
-        {
-            ProductValidator.ValidateProduct(product);
             AnalyzeResult result = new(product);
             for (int i = 0; i < temperatureValues.Length; ++i, initiateDateTime += AnalyzingTimeInterval)
             {
@@ -40,21 +23,11 @@ namespace TemperatureMonitoring.Core
             return result;
         }
 
-        public void SaveToFile(AnalyzeResult result, string verdict, string filename)
+        public AnalyzeResult Analyze(Product product,
+            FileParsingResult parsingResult)
         {
-            try
-            {
-                using StreamWriter sw = new(File.Open(filename, FileMode.Create, FileAccess.Write));
-                foreach (var line in result.Results)
-                {
-                    sw.WriteLine(line);
-                }
-                sw.WriteLine(verdict);
-            }
-            catch (Exception e)
-            {
-                throw new FileReadException($"Error reading file {filename}", e);
-            }
+            return Analyze(product, parsingResult.InitiateDate,
+                parsingResult.Temperatures);
         }
 
         private ComparisionResult IsTemperatureRight(Product product, int temp)

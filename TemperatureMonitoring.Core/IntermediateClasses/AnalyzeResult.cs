@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace TemperatureMonitoring.Core
+namespace TemperatureMonitoring.Core.IntermediateClasses
 {
     public class AnalyzeResult
     {

@@ -2,19 +2,22 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
+using TemperatureMonitoring.Core.Interfaces;
 
 namespace TemperatureMonitoring.Core.Tests
 {
     public class Tests
     {
-        private static string TestFile = @"C:\Users\202026\source\repos\TemperatureMonitoring\TemperatureMonitoring.Core.Tests\testFiles\test1.txt";
-        private static string WrongFormatFile = @"C:\Users\202026\source\repos\TemperatureMonitoring\TemperatureMonitoring.Core.Tests\testFiles\test2.txt";
+        private static string TestFile = @"C:\Users\wingi\RiderProjects\TemperatureMonitoring\TemperatureMonitoring.Core.Tests\testFiles\test1.txt";
+        private static string WrongFormatFile = @"C:\Users\wingi\RiderProjects\TemperatureMonitoring\TemperatureMonitoring.Core.Tests\testFiles\test2.txt";
         private static string NotExistingFile = @"C:\Users\202026\source\repos\TemperatureMonitoring\TemperatureMonitoring.Core.Tests\testFiles\test123.txt";
         private ITemperatureAnalyzer _analyzer;
+        private IFileWorker _fileWorker;
         [SetUp]
         public void Setup()
         {
             _analyzer = new TemperatureSensorAnalyzer();
+            _fileWorker = new FileWorker();
         }
 
         [Test]
@@ -40,7 +43,7 @@ namespace TemperatureMonitoring.Core.Tests
             };
             var expectedMinTempDuration = TimeSpan.FromMinutes(70);
             
-            var result = _analyzer.AnalyzeFromInput(product, initiateDate, temperatures);
+            var result = _analyzer.Analyze(product, initiateDate, temperatures);
             
             Assert.That(result.MinimumTemperatureStoringTime, Is.EqualTo(expectedMinTempDuration), "Wrong storing time");
             Assert.IsTrue(result.Results.SequenceEqual(expectedLines), "Wrong result lines");
@@ -82,7 +85,7 @@ namespace TemperatureMonitoring.Core.Tests
             };
             var expectedMaxTempDuration = TimeSpan.FromMinutes(210);
             
-            var result = _analyzer.AnalyzeFromInput(product, initiateDate, temperatures);
+            var result = _analyzer.Analyze(product, initiateDate, temperatures);
             
             Assert.That(result.MaximumTemperatureStoringTime, Is.EqualTo(expectedMaxTempDuration), "Wrong storing time");
             Assert.IsTrue(result.Results.SequenceEqual(expectedLines), "Wrong result lines");
@@ -108,8 +111,9 @@ namespace TemperatureMonitoring.Core.Tests
                 "12.06.2022 16:23;-4;-3;-1"
             };
             var expectedMinTempDuration = TimeSpan.FromMinutes(70);
-            
-            var result = _analyzer.AnalyzeFromFile(product, TestFile);
+
+            var parsingResult = _fileWorker.ParseFile(TestFile);
+            var result = _analyzer.Analyze(product, parsingResult);
             
             Assert.That(result.MinimumTemperatureStoringTime, Is.EqualTo(expectedMinTempDuration), "Wrong storing time");
             Assert.IsTrue(result.Results.SequenceEqual(expectedLines), "Wrong result lines");
@@ -119,8 +123,9 @@ namespace TemperatureMonitoring.Core.Tests
         public void NoTemperatures()
         {
             Product product = new Product();
-
-            var result = _analyzer.AnalyzeFromFile(product, TestFile);
+            
+            var parsingResult = _fileWorker.ParseFile(TestFile);
+            var result = _analyzer.Analyze(product, parsingResult);
             
             Assert.That(result.MaximumTemperatureStoringTime, Is.EqualTo(TimeSpan.Zero));
             Assert.That(result.MinimumTemperatureStoringTime, Is.EqualTo(TimeSpan.Zero));
@@ -130,25 +135,13 @@ namespace TemperatureMonitoring.Core.Tests
         [Test]
         public void NotExistingFileParsing()
         {
-            Product product = new Product
-            {
-                Name = "Семга", MaxTemperature = 5, MaxTemperatureTimeToStore = TimeSpan.FromMinutes(20),
-                MinTemperature = -3, MinTemperatureTimeToStore = TimeSpan.FromMinutes(60)
-            };
-
-            Assert.Throws<FileReadException>(() => _analyzer.AnalyzeFromFile(product, NotExistingFile));
+            Assert.Throws<FileReadException>(() => _fileWorker.ParseFile(NotExistingFile));
         }
 
         [Test]
         public void WrongFormatFileParsing()
         {
-            Product product = new Product
-            {
-                Name = "Семга", MaxTemperature = 5, MaxTemperatureTimeToStore = TimeSpan.FromMinutes(20),
-                MinTemperature = -3, MinTemperatureTimeToStore = TimeSpan.FromMinutes(60)
-            };
-
-            Assert.Throws<FileReadException>(() => _analyzer.AnalyzeFromFile(product, WrongFormatFile));
+            Assert.Throws<FileReadException>(() => _fileWorker.ParseFile(WrongFormatFile));
         }
     }
 }
