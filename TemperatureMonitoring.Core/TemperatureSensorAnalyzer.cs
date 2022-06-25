@@ -27,17 +27,13 @@ namespace TemperatureMonitoring.Core
         public AnalyzeResult AnalyzeFromInput(Product product, DateTime initiateDateTime, int[] temperatureValues)
         {
             AnalyzeResult result = new(product);
-            foreach (var temp in temperatureValues)
+            for (int i = 0; i < temperatureValues.Length; ++i, initiateDateTime += AnalyzingTimeInterval)
             {
-                var res = IsTemperatureRight(product, temp);
+                var res = IsTemperatureRight(product, temperatureValues[i]);
                 if (res.IsOk)
-                {
-                    initiateDateTime += AnalyzingTimeInterval;
                     continue;
-                }
-                
+
                 result.AccountTransportingMistake(initiateDateTime, res.FactTemperature, res.NormTemperature);
-                initiateDateTime += AnalyzingTimeInterval;
             }
 
             return result;

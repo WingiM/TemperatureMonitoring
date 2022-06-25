@@ -17,4 +17,11 @@
       <ProjectReference Include="..\TemperatureMonitoring.Core\TemperatureMonitoring.Core.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <None Remove="testFiles\test1.txt" />
+      <Resource Include="testFiles\test1.txt" />
+      <None Remove="testFiles\test2.txt" />
+      <Resource Include="testFiles\test2.txt" />
+    </ItemGroup>
+
 </Project>

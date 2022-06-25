@@ -1,6 +1,6 @@
 ﻿namespace TemperatureMonitoring.Core
 {
-    public class ComparisionResult
+    internal class ComparisionResult
     {
         public bool IsOk { get; }
         public int FactTemperature { get; }

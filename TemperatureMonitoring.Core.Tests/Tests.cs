@@ -7,6 +7,8 @@ namespace TemperatureMonitoring.Core.Tests
 {
     public class Tests
     {
+        private static string TestFile1 = @"C:\Users\202026\source\repos\TemperatureMonitoring\TemperatureMonitoring.Core.Tests\testFiles\test1.txt";
+        private static string WrongFile = @"C:\Users\202026\source\repos\TemperatureMonitoring\TemperatureMonitoring.Core.Tests\testFiles\test123.txt";
         private ITemperatureAnalyzer _analyzer;
         [SetUp]
         public void Setup()
@@ -15,7 +17,7 @@ namespace TemperatureMonitoring.Core.Tests
         }
 
         [Test]
-        public void BadShipmentTest()
+        public void BadShipmentWithAllTemperatures()
         {
             DateTime initiateDate = new DateTime(2022, 6, 12, 12, 23, 0);
             int[] temperatures = { 1, 2, 3, 3, 4, 3, 5, 4, 2, 1, 1, 1, 1, 0, -1, -2, -2, -3, -4, -4, -5, -5, -4, -4, -4, -3 };
@@ -44,7 +46,7 @@ namespace TemperatureMonitoring.Core.Tests
         }
 
         [Test]
-        public void BadShipmentWithNoMinTemperatureTest()
+        public void BadShipmentWithNoMinTemperature()
         {
             DateTime initiateDate = new DateTime(2022, 6, 14, 06, 17, 0);
             int[] temperatures = { -10, -8, -4, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -2, -4, -4, -5, -5, -4, -4, -4 };
@@ -83,6 +85,45 @@ namespace TemperatureMonitoring.Core.Tests
             
             Assert.That(result.MaximumTemperatureStoringTime, Is.EqualTo(expectedMaxTempDuration), "Wrong storing time");
             Assert.IsTrue(result.Results.SequenceEqual(expectedLines), "Wrong result lines");
+        }
+
+        [Test]
+        public void BadShipmentFromFile()
+        {
+            Product product = new Product
+            {
+                Name = "Семга", MaxTemperature = 5, MaxTemperatureTimeToStore = TimeSpan.FromMinutes(20),
+                MinTemperature = -3, MinTemperatureTimeToStore = TimeSpan.FromMinutes(60)
+            };
+
+            List<string> expectedLines = new()
+            {
+                "12.06.2022 15:23;-4;-3;-1",
+                "12.06.2022 15:33;-4;-3;-1",
+                "12.06.2022 15:43;-5;-3;-2",
+                "12.06.2022 15:53;-5;-3;-2",
+                "12.06.2022 16:03;-4;-3;-1",
+                "12.06.2022 16:13;-4;-3;-1",
+                "12.06.2022 16:23;-4;-3;-1",
+            };
+            var expectedMinTempDuration = TimeSpan.FromMinutes(70);
+            
+            var result = _analyzer.AnalyzeFromFile(product, TestFile1);
+            
+            Assert.That(result.MinimumTemperatureStoringTime, Is.EqualTo(expectedMinTempDuration), "Wrong storing time");
+            Assert.IsTrue(result.Results.SequenceEqual(expectedLines), "Wrong result lines");
+        }
+
+        [Test]
+        public void WrongFileParsing()
+        {
+            Product product = new Product
+            {
+                Name = "Семга", MaxTemperature = 5, MaxTemperatureTimeToStore = TimeSpan.FromMinutes(20),
+                MinTemperature = -3, MinTemperatureTimeToStore = TimeSpan.FromMinutes(60)
+            };
+
+            Assert.Throws<FileReadException>(() => _analyzer.AnalyzeFromFile(product, WrongFile));
         }
     }
 }
