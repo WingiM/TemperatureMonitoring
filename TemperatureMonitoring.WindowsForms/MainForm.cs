@@ -100,9 +100,11 @@ namespace TemperatureMonitoring.WindowsForms
         {
             try
             {
+                saveFile.FileName = "report.txt";
+                saveFile.Filter = "Text files (*.txt)|*.txt";
                 if (saveFile.ShowDialog() == DialogResult.OK)
                 {
-                    _analyzer.SaveToFile(_result, saveFile.FileName, VerdictText.Text);
+                    _analyzer.SaveToFile(_result, VerdictText.Text, saveFile.FileName);
                 }
             }
             catch (FileReadException)

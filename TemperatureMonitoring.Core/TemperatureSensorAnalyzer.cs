@@ -40,7 +40,7 @@ namespace TemperatureMonitoring.Core
             return result;
         }
 
-        public void SaveToFile(AnalyzeResult result, string filename, string verdict)
+        public void SaveToFile(AnalyzeResult result, string verdict, string filename)
         {
             try
             {
