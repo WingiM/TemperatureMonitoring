@@ -1,0 +1,6 @@
+﻿.idea/
+.vs/
+TemperatureMonitoring.Core/bin/
+TemperatureMonitoring.Core/obj/
+TemperatureMonitoring.WindowsForms/bin/
+TemperatureMonitoring.WindowsForms/obj/
